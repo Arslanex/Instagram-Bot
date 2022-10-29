@@ -308,3 +308,6 @@ class Instagram_Bot:
         if input("[Y/N] :: ") == "y" or input("[Y/N] >> ") == "Y":
             self.__delete_dir("{}posts".format(username))
 
+        def __delete_dir(self, path):
+            shutil.rmtree(path)
+            print("SYSTEM :: {} file has been deleted".format(path))
