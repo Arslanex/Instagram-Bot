@@ -173,3 +173,21 @@ class Instagram_Bot:
                 verified.append(val[0])
 
         return names, verified
+
+    def unfollow_user(self, username):
+        self.browser.get("https://www.instagram.com/{}/".format(username))
+        print("\nINFO :: Program have entered {} account page".format(username))
+        time.sleep(3)
+        btn = self.browser.find_element(By.TAG_NAME, 'button') #sayfadaki ilk buton
+        if btn.text == "Mesaj Gönder":
+            self.browser.find_elements(By.TAG_NAME, 'button')[1].click()
+            time.sleep(1)
+            self.browser.find_element(By.CSS_SELECTOR, 'div[role=dialog] button').click()
+            print("INFO :: Account succsefully unfollowed")
+        else:
+            print("INFO :: You don't follow the account")
+
+    def unfollow_users(self, ids):
+        for i in ids:
+            target = self.blacklist[int(i)]
+            self.unfollow_user(target)
