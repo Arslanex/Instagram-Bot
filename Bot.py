@@ -191,3 +191,22 @@ class Instagram_Bot:
         for i in ids:
             target = self.blacklist[int(i)]
             self.unfollow_user(target)
+
+    def message(self,account, message):
+        print("\nINFO :: {} message process has been started".format(account))
+        self.browser.get("https://www.instagram.com/{}/".format(account))
+        time.sleep(3)
+        btn = self.browser.find_element(By.TAG_NAME, 'button')  # sayfadaki ilk buton
+        if btn.text == "Mesaj Gönder":
+            btn.click()
+            time.sleep(5)
+            textbox = self.browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div/div[1]/div/div/div/div[1]/div[1]/section/div/div[2]/div/div/div[2]/div[2]/div/div[2]/div/div/div[2]/textarea")
+            textbox.send_keys(message)
+            textbox.send_keys(Keys.ENTER)
+            print("INFO :: Mesage has been sent to {}".format(account))
+        else:
+            print("INFO :: This account is private and you don't follow it")
+
+    def send_to_all(self, accounts, message):
+        for account in accounts:
+            self.message(account, message)
