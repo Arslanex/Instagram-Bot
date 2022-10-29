@@ -118,3 +118,58 @@ class Instagram_Bot:
             self.unfollow_users(liste)
         else:
             print("INFO :: Process have finished")
+
+    def get_followers(self, username):
+        self.browser.get("https://www.instagram.com/{}/followers/".format(username))
+        print("\nINFO :: Program have opened followers list")
+        time.sleep(5)
+        scrollBar = self.browser.find_element(By.XPATH,
+                                              "/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]")
+        print("INFO :: Scrolling have started")
+        last_ht, ht = 0, 1
+        while last_ht != ht:
+            last_ht = ht
+            time.sleep(2)
+            # scroll down and retrun the height of scroll (JS script)
+            ht = self.browser.execute_script(""" 
+                           arguments[0].scrollTo(0, arguments[0].scrollHeight);
+                           return arguments[0].scrollHeight; """, scrollBar)
+        print("INFO :: Program have finished scrolling")
+        print("INFO :: Extracting followers")
+        links = scrollBar.find_elements(By.TAG_NAME, 'a')
+        time.sleep(3)
+        names = [name.text for name in links if name.text != '']
+        # print(names)
+        print("INFO :: Extracting completed\n\t\t{} has {} followers".format(username, (names)))
+        return names
+
+    def get_following(self, username):
+        self.browser.get("https://www.instagram.com/{}/following/".format(username))
+        print("\nINFO :: Program have opened following list")
+        time.sleep(5)
+        scrollBar = self.browser.find_element(By.XPATH,
+                                              "/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]")
+        last_ht, ht = 0, 1
+        verified = []
+        print("INFO :: Scrolling have started")
+        while last_ht != ht:
+            last_ht = ht
+            time.sleep(2)
+            # scroll down and retrun the height of scroll (JS script)
+            ht = self.browser.execute_script(""" 
+                                  arguments[0].scrollTo(0, arguments[0].scrollHeight);
+                                  return arguments[0].scrollHeight; """, scrollBar)
+        print("INFO :: Program have finished scrolling")
+        print("INFO :: Extracting followings")
+        links = scrollBar.find_elements(By.TAG_NAME, 'a')
+        time.sleep(3)
+        names = [name.text for name in links if name.text != '']
+        # print(names)
+        for name in names:
+            val = name.split("\n")
+            if len(val) > 1:
+                index = names.index(name)
+                names[index] = val[0]
+                verified.append(val[0])
+
+        return names, verified
