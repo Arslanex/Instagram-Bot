@@ -89,3 +89,32 @@ class Instagram_Bot:
         # print(names)
         self.following = names
         print("INFO :: Extracting completed\n\t\tYou are following {} accounts".format(len(names)))
+
+    def who_is_not_following(self):
+        self.get_my_folowers()
+        self.get_my_following()
+        results = []
+        for target in self.following:
+            cnt = 0
+            for name in self.follwers:
+                if target == name:
+                    cnt+=1
+            if cnt == 0:
+                results.append(target)
+
+        print("\n====== BLACKLIST ======")
+        id = 0
+        for i in results:
+            print("ID:",id, "User:",i)
+            self.blacklist[id] = i
+            id += 1
+
+        print("\nDo you want to unfollow someone ? [Y/N]")
+        answer = input("> ")
+        if answer == "y" or answer == "Y":
+            print("Please enter ID numbers (with spaces) you want to unfollow")
+            ids = input("=> ")
+            liste = ids.split()
+            self.unfollow_users(liste)
+        else:
+            print("INFO :: Process have finished")
