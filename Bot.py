@@ -268,3 +268,43 @@ class Instagram_Bot:
         time.sleep(3)
 
         cnt = 1
+
+        # download first post
+        # image = self.browser.find_element(By.TAG_NAME, "img")
+        # img_link = image.get_attribute('src')
+        # urllib.request.urlretrieve(img_link, str(cnt) + "here.jpg")
+        # time.sleep(3)
+
+        os.mkdir("{}posts".format(username))
+
+        while True:
+            print("\t--> Downloading Post", cnt)
+            time.sleep(1)
+
+            # if self.browser.find_element(By.CSS_SELECTOR, "[aria-label=İleri]"):
+            #    self.browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/article/div/div[2]/div/div[1]/div[2]/div/button").click()
+            #    print("found")
+            #    continue
+
+            images = posts[cnt - 1].find_elements(By.TAG_NAME, "img")
+            for num, img in enumerate(images):
+                img_link = img.get_attribute('src')
+                urllib.request.urlretrieve(img_link, "{}posts/{}_{}_{}.jpg".format(username, username, cnt, num))
+
+            if self.browser.find_element(By.XPATH,
+                                         "/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/button"):
+                self.browser.find_elements(By.XPATH,
+                                           "/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/button")[
+                    -1].click()
+                cnt += 1
+                time.sleep(.5)
+
+            if cnt > len(posts):
+                break
+        print("\nINFO :: Print all posts have downloaded")
+        print("SYSTEM :: Creating .zip file")
+        shutil.make_archive("{}posts".format(username), format='zip', root_dir="{}posts".format(username))
+        print("INFO :: .zip file has been created\nDo you want to delete downloaded post folder ? ")
+        if input("[Y/N] :: ") == "y" or input("[Y/N] >> ") == "Y":
+            self.__delete_dir("{}posts".format(username))
+
