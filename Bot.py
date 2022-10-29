@@ -210,3 +210,61 @@ class Instagram_Bot:
     def send_to_all(self, accounts, message):
         for account in accounts:
             self.message(account, message)
+
+    def get_followed_user_profile(self, username):
+        self.browser.get("https://www.instagram.com/{}/".format(username))
+        print("\nINFO :: {} page have been opened".format(username))
+        time.sleep(3)
+        private = 0
+        try:
+            image = self.browser.find_element(By.XPATH, '//img[@class="_aa8j"]')
+            private = False
+        except:
+            image = self.browser.find_element(By.XPATH, '//img[@class="_aadp"]')
+            private = True
+        img_link = image.get_attribute('src')
+        urllib.request.urlretrieve(img_link,"here.jpg")
+        print("INFO :: Profile Picture have been downloaded")
+
+        tab = self.browser.find_element(By.TAG_NAME, "article")
+
+        text = "Gönderi : var"
+        try:
+            if tab.find_element(By.TAG_NAME, "h1").text == "Henüz Hiç Gönderi Yok":
+                text = "Gönderi : yok"
+        except:pass
+
+        time.sleep(3)
+        followers = self.browser.find_elements(By.TAG_NAME, "a")[0].text
+        following = self.browser.find_elements(By.TAG_NAME, "a")[1].text
+        time.sleep(3)
+        if private:
+            private = "Gizli"
+        else:
+            private = "Gizli Değil"
+
+        time.sleep(3)
+        names, verified = self.get_following(username)
+        time.sleep(10)
+        print("\n===== RESULTS =====")
+        print("Account Name ::", username)
+        print("Account Privacy ::", private)
+        print("Follower Count ::", followers)
+        print("Following Count ::", following)
+        print("VERIFIED Accounts {} Follows :: ".format(username))
+        for num, name in enumerate(verified):
+            print("\t", num, "-", name)
+        print("Does Account Have Posts ::", text)
+        downloadPosts = input("SYSTEM :: Would you like to download all post of this user ? [Y/H] >> ")
+        if downloadPosts == "y" or downloadPosts == "Y":
+            self.__download_all_posts(username)
+
+    def __download_all_posts(self, username):
+        self.browser.get("https://www.instagram.com/{}/".format(username))
+        print("\nINFO :: Starting download.".format(username))
+        time.sleep(3)
+        posts = self.browser.find_elements(By.CLASS_NAME, "_aagu")
+        posts[0].click()
+        time.sleep(3)
+
+        cnt = 1
