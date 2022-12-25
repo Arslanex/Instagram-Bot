@@ -10,8 +10,8 @@
   <p> 
   What the program can do : 
   <ul>
-    <li> extract following list </li>
-    <li> extract follower list </li>
+    <li> extract following list (users & others) </li>
+    <li> extract follower list (users & others) </li>
     <li> compare following/followers </li>
     <li> unfollow user(s) </li>
     <li> message user(s) </li>
