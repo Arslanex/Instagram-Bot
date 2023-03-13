@@ -30,8 +30,9 @@ To use this program you need to :
 1. Enter your account informations to userinfo.py
 2. Create a main.py script in program folder
 3. import Instagram_Bot module
-4. Call the function you want use
-5. Run main.py in your command promt
+4. Call login function 
+5. Call the functions you want use
+6. Run main.py in your command promt
 
 ***
 <h3 align="center"> Enes ARSLAN </h3>
